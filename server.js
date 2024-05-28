@@ -33,7 +33,7 @@ app.post("/api/test", async (req, res) => {
 
 // home route
 app.get("/", (req, res) => {
-  res.json({ message: "Welcome to the wait list backend." });
+  return "Welcome to the wait list backend server.";
 });
 
 // not found middleware
