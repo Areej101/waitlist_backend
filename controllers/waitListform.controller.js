@@ -11,7 +11,7 @@ async function RegisterUser(req, res) {
         const client = await connectToDatabase();
 
         // Check if the users table exists
-        const tableExists = await checkTableExists(client);
+        const tableExists = await checkTableExists(client, 'users');
 
         // Create the users table if it doesn't exist
         if (!tableExists) {

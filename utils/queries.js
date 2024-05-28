@@ -1,8 +1,8 @@
-const checkTableExists = async (client) => {
+const checkTableExists = async (client, tableName) => {
     const result = await client.sql`
       SELECT EXISTS (
         SELECT FROM information_schema.tables 
-        WHERE table_name = 'users'
+        WHERE table_name = ${tableName}
       ) AS "exists"
     `;
     return result.rows[0].exists;
@@ -42,10 +42,45 @@ const checkTableExists = async (client) => {
     return result.rows;
   };
 
+
+  const createKeyValueTable = async (client) => {
+    await client.sql`
+      CREATE TABLE "key-value" (
+        id SERIAL PRIMARY KEY,
+        key VARCHAR(255) UNIQUE,
+        value BOOLEAN
+      )
+    `;
+  };
+
+  const findKeyValue = async (client, key) => {
+    const result = await client.sql`
+      SELECT * FROM "key-value" WHERE key = ${key}
+    `;
+    return result.rows[0];
+  };
+  
+  const upsertKeyValue = async (client, key, value) => {
+    const existingKeyValue = await findKeyValue(client, key);
+  
+    if (existingKeyValue) {
+      await client.sql`
+        UPDATE "key-value" SET value = ${value} WHERE key = ${key}
+      `;
+    } else {
+      await client.sql`
+        INSERT INTO "key-value" (key, value) VALUES (${key}, ${value})
+      `;
+    }
+  };
+
   module.exports = { 
     checkTableExists, 
     createUsersTable, 
     insertUser, 
     findUserByEmail, 
     getAllUsers,
+    createKeyValueTable,
+    findKeyValue,
+    upsertKeyValue,
 };

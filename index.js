@@ -19,7 +19,7 @@ app.get("/", async (req, res) => {
   const client = await connectToDatabase();
   const result = await client.sql`SELECT 1`;
   console.log(result);
-  res.send(`Database connected successfully: ${result}`);
+  res.send(`Database connected successfully`);
 });
 
 // not found middleware
