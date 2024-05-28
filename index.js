@@ -4,7 +4,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 
 // connect to mongoDB
-const mongoose = require("./utils/db");
+const { connectToDatabase } = require("./utils/db");
 
 const app = express();
 app.use(cors());
@@ -14,26 +14,12 @@ app.use(bodyParser.json());
 const routes = require("./routes");
 app.use('/api',routes);
 
-// api/test will be removed after production.
-app.post("/api/test", async (req, res) => {
-  try {
-    console.log("api-test hit POST");
-    console.log("req.body-------------");
-    console.log(req.body);
-    console.log("req.params-------------");
-    console.log(req.params);
-    console.log("req.query-------------");
-    console.log(req.query);
-    res.json({ message: "test API Hit successfully" });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "test API failed" });
-  }
-});
-
 // home route
-app.get("/", (req, res) => {
-  res.send("Welcome to the wait list backend server.");
+app.get("/", async (req, res) => {
+  const client = await connectToDatabase();
+  const result = await client.sql`SELECT 1`;
+  console.log(result);
+  res.send(`Database connected successfully: ${result}`);
 });
 
 // not found middleware

@@ -1,8 +1,14 @@
-const mongoose = require("mongoose");
+const { db } = require("@vercel/postgres");
 
-mongoose
-  .connect(process.env.NODE_ENV !== "development" ? process.env.MONGODB_URL : process.env.MONGODB_URL_DEV)
-  .then(() => console.log("Database connected"))
-  .catch((err) => console.log("Database not connected", err));
+let client;
 
-module.exports = mongoose;
+const connectToDatabase = async () => {
+  if (!client) {
+    client = await db.connect();
+    await client.sql`SELECT 1`;  // Test the connection
+    console.log("Connected to the database");
+  }
+  return client;
+};
+
+module.exports = { connectToDatabase };
