@@ -10,8 +10,8 @@
     "twilio": "^5.0.1"
   },
   "scripts": {
-    "dev": "nodemon server.js",
-    "start": "node server.js"
+    "dev": "nodemon index.js",
+    "start": "node index.js"
   },
   "name": "blogging-app",
   "version": "1.0.0",
