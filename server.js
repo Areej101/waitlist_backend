@@ -31,6 +31,11 @@ app.post("/api/test", async (req, res) => {
   }
 });
 
+// home route
+app.get("/", (req, res) => {
+  res.json({ message: "Welcome to the wait list backend." });
+});
+
 // not found middleware
 app.use((req, res, next) => {
   res.status(404).json({ message: "Not found" });
